@@ -1,0 +1,164 @@
+# Managed by majestic. Comments and formatting are removed when settings change
+# via the web UI or API.
+system:
+  webPort: 80
+  httpsPort: 443
+  logLevel: debug
+  unsafe: false
+  buffer: 1024
+  plugins: false
+  staticDir: /var/www
+  telemetry: true
+isp:
+  antiFlicker: disabled
+  iqServer: false
+image:
+  mirror: true
+  flip: true
+  contrast: 50
+  hue: 50
+  saturation: 50
+  luminance: 50
+  rotate: 0
+video0:
+  codec: h264
+  fps: 20
+  bitrate: 4096
+  adjustBitrate: false
+  osd: true
+  rcMode: vbr
+  profile: main
+  crop: []
+  enabled: true
+  gopSize: "1"
+  sliceUnits: 0
+  svct: "off"
+  roiRect: []
+  size: 2304x1296
+  minQp: 12
+  maxQp: 48
+  qpDelta: -4
+  ipProp: 5
+video1:
+  codec: h264
+  fps: 15
+  bitrate: 1024
+  adjustBitrate: true
+  osd: true
+  rcMode: vbr
+  profile: main
+  crop: []
+  size: 704x576
+  enabled: false
+  svct: "off"
+jpeg:
+  enabled: true
+  qfactor: 50
+  fps: 5
+  osd: true
+  rtsp: false
+osd:
+  enabled: true
+  template: "%d.%m.%Y %H:%M:%S"
+  font: /usr/share/fonts/truetype/UbuntuMono-Regular.ttf
+  size: "1.0"
+  weight: normal
+  outline: true
+  anchor: proportional
+  offsetX: "0"
+  offsetY: "0"
+  posX: 16
+  posY: 16
+  bgAlpha: 25
+  privacyMasks: []
+audio:
+  enabled: true
+  volume: 90
+  srate: "8000"
+  codec: alaw
+  outputEnabled: true
+  outputVolume: 90
+  speakerPinInvert: false
+  jitterBufferMs: 0
+  speakerPin: 15
+rtsp:
+  enabled: true
+  port: 554
+  backchannel: true
+  audioCodec: pcm
+webrtc:
+  iceServers: "stun:stun.cloudflare.com:3478"
+sip:
+  enabled: false
+  server: ""
+  port: 5060
+  username: ""
+  password: ""
+  localUri: ""
+  callTarget: ""
+  localIp: ""
+  localPort: 5060
+  doRegister: true
+  registerExpires: 3600
+  buttonActiveLow: true
+  rtpPortHint: 5004
+  ringMode: sequential
+  ringSeconds: 10
+  ringCycles: 3
+nightMode:
+  colorToGray: true
+  irCutSingleInvert: false
+  lightMonitor: false
+  lightSensorInvert: false
+  monitorDelay: 0
+  irCutPin1: 79
+  irCutPin2: 78
+  backlightPin: 61
+motionDetect:
+  enabled: false
+  visualize: false
+  debug: false
+  roi: []
+  sensitivity: 3
+records:
+  enabled: false
+  path: "/mnt/mmcblk0p1/%F"
+  filename: "%H-%M"
+  split: 20
+  maxUsage: 95
+  substream: false
+  audioCodec: ""
+outgoing:
+  enabled: false
+  naluSize: 1200
+  substream: false
+  audioSource: auto
+  audioCodec: ""
+watchdog:
+  enabled: true
+  timeout: 300
+hls:
+  enabled: false
+mdns:
+  enabled: true
+onvif:
+  enabled: false
+  username: root
+  password: "123456"
+ipeye:
+  enabled: false
+netip:
+  enabled: false
+  snapshots: false
+  ignoreSetTime: false
+cloud:
+  enabled: false
+  host: ""
+  port: 8443
+ptz:
+  enabled: false
+  move_left: "gpio-motors -200 0 1"
+  move_right: "gpio-motors 200 0 1"
+  move_up: "gpio-motors 0 -200 1"
+  move_down: "gpio-motors 0 200 1"
+  move_stop: "gpio-motors 0 0 0"

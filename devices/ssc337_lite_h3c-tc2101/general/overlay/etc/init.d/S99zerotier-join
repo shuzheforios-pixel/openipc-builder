@@ -1,0 +1,40 @@
+#!/bin/sh
+
+ZT_NETWORK_ID="8d1c312afa5243c4"
+
+start() {
+ 
+    if [ -f /etc/zerotier.conf ]; then
+        if grep -q "^enabled=" /etc/zerotier.conf; then
+            sed -i 's/^enabled=.*/enabled=true/' /etc/zerotier.conf
+        else
+            echo "enabled=true" >> /etc/zerotier.conf
+        fi
+    else
+        echo "enabled=true" > /etc/zerotier.conf
+    fi
+
+ 
+    /etc/init.d/S90zerotier start
+ 
+    i=0
+    while [ $i -lt 30 ]; do
+        if zerotier-cli info > /dev/null 2>&1; then
+            break
+        fi
+        sleep 1
+        i=$((i + 1))
+    done
+
+ 
+    if ! zerotier-cli listnetworks 2>/dev/null | grep -q "$ZT_NETWORK_ID"; then
+        zerotier-cli join "$ZT_NETWORK_ID" 2>&1 | logger -t zerotier-join
+    fi
+}
+
+stop() { :; }
+
+case "$1" in
+    start) start ;;
+    *) echo "Usage: $0 {start}"; exit 1 ;;
+esac

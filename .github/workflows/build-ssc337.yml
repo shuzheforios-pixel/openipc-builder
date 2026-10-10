@@ -1,0 +1,46 @@
+name: Build OpenIPC Firmware SSC337
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git wget curl \
+            libncurses-dev libssl-dev python3 python3-pip \
+            unzip rsync bc cpio file libtool automake squashfs-tools
+
+      - name: Build firmware
+        run: |
+          chmod +x builder.sh
+          ./builder.sh ssc337_lite_h3c-tc2101
+
+      - name: Download U-Boot
+        run: |
+          mkdir -p output-images
+          cd output-images
+          wget https://github.com/openipc/firmware/releases/download/latest/u-boot-ssc337-nor.bin
+
+      - name: Assemble .bin
+        run: |
+          cd output-images
+          ls -la
+          find ../ -name "uImage.ssc337" -o -name "rootfs.squashfs.ssc337" | head
+          dd if=/dev/zero bs=1K count=16384 status=none | tr '\000' '\377' > openipc-ssc337-nor-lite.bin
+          dd if=u-boot-ssc337-nor.bin of=openipc-ssc337-nor-lite.bin bs=1K seek=0    conv=notrunc status=none
+          dd if=$(find ../ -name "uImage.ssc337" | head -1) of=openipc-ssc337-nor-lite.bin bs=1K seek=320  conv=notrunc status=none
+          dd if=$(find ../ -name "rootfs.squashfs.ssc337" | head -1) of=openipc-ssc337-nor-lite.bin bs=1K seek=2368 conv=notrunc status=none
+          ls -la openipc-ssc337-nor-lite.bin
+
+      - name: Upload .bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: openipc-ssc337-nor-lite
+          path: output-images/openipc-ssc337-nor-lite.bin
