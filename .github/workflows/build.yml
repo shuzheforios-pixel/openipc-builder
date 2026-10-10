@@ -11,4 +11,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Test
-        run: echo "Actions 跑通了"
+        run: echo "Actions ok"
