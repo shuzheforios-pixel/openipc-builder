@@ -1,0 +1,50 @@
+name: Build OpenIPC Firmware T31ZX Ultimate XFP301-M
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git wget curl \
+            libncurses-dev libssl-dev python3 python3-pip \
+            unzip rsync bc cpio file libtool automake squashfs-tools
+
+      - name: Build firmware
+        run: |
+          chmod +x builder.sh
+          ./builder.sh t31_ultimate_iflytek-xfp301m
+
+      - name: Download U-Boot
+        run: |
+          mkdir -p output-images
+          cd output-images
+          wget https://github.com/openipc/firmware/releases/download/latest/u-boot-t31zx-nor.bin
+
+      - name: Debug - find artifacts
+        run: |
+          find . -name "uImage*" -o -name "rootfs.squashfs*" | head -20
+
+      - name: Assemble .bin
+        run: |
+          cd output-images
+          ls -la
+          find ../ -name "uImage.t31*" -o -name "rootfs.squashfs.t31*" | head
+          dd if=/dev/zero bs=1K count=16384 status=none | tr '\000' '\377' > openipc-t31zx-nor-ultimate-xfp301m.bin
+          dd if=u-boot-t31zx-nor.bin of=openipc-t31zx-nor-ultimate-xfp301m.bin bs=1K seek=0    conv=notrunc status=none
+          dd if=$(find ../ -name "uImage.t31*" | head -1) of=openipc-t31zx-nor-ultimate-xfp301m.bin bs=1K seek=320  conv=notrunc status=none
+          dd if=$(find ../ -name "rootfs.squashfs.t31*" | head -1) of=openipc-t31zx-nor-ultimate-xfp301m.bin bs=1K seek=2368 conv=notrunc status=none
+          ls -la openipc-t31zx-nor-ultimate-xfp301m.bin
+
+      - name: Upload .bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: openipc-t31zx-nor-ultimate-xfp301m
+          path: output-images/openipc-t31zx-nor-ultimate-xfp301m.bin
