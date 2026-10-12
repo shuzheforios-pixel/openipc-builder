@@ -1,4 +1,4 @@
-name: Build OpenIPC Firmware T31ZX Ultimate XFP301-M
+name: Build OpenIPC Firmware T31X Ultimate XFP301-M
 
 on:
   workflow_dispatch:
@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir -p output-images
           cd output-images
-          wget https://github.com/openipc/firmware/releases/download/latest/u-boot-t31zx-nor.bin
+          wget https://github.com/openipc/firmware/releases/download/latest/u-boot-t31x-nor.bin
 
       - name: Debug - find artifacts
         run: |
@@ -37,14 +37,14 @@ jobs:
           cd output-images
           ls -la
           find ../ -name "uImage.t31*" -o -name "rootfs.squashfs.t31*" | head
-          dd if=/dev/zero bs=1K count=16384 status=none | tr '\000' '\377' > openipc-t31zx-nor-ultimate-xfp301m.bin
-          dd if=u-boot-t31zx-nor.bin of=openipc-t31zx-nor-ultimate-xfp301m.bin bs=1K seek=0    conv=notrunc status=none
-          dd if=$(find ../ -name "uImage.t31*" | head -1) of=openipc-t31zx-nor-ultimate-xfp301m.bin bs=1K seek=320  conv=notrunc status=none
-          dd if=$(find ../ -name "rootfs.squashfs.t31*" | head -1) of=openipc-t31zx-nor-ultimate-xfp301m.bin bs=1K seek=2368 conv=notrunc status=none
-          ls -la openipc-t31zx-nor-ultimate-xfp301m.bin
+          dd if=/dev/zero bs=1K count=16384 status=none | tr '\000' '\377' > openipc-t31x-nor-ultimate-xfp301m.bin
+          dd if=u-boot-t31x-nor.bin of=openipc-t31x-nor-ultimate-xfp301m.bin bs=1K seek=0    conv=notrunc status=none
+          dd if=$(find ../ -name "uImage.t31*" | head -1) of=openipc-t31x-nor-ultimate-xfp301m.bin bs=1K seek=320  conv=notrunc status=none
+          dd if=$(find ../ -name "rootfs.squashfs.t31*" | head -1) of=openipc-t31x-nor-ultimate-xfp301m.bin bs=1K seek=2368 conv=notrunc status=none
+          ls -la openipc-t31x-nor-ultimate-xfp301m.bin
 
       - name: Upload .bin
         uses: actions/upload-artifact@v4
         with:
-          name: openipc-t31zx-nor-ultimate-xfp301m
-          path: output-images/openipc-t31zx-nor-ultimate-xfp301m.bin
+          name: openipc-t31x-nor-ultimate-xfp301m
+          path: output-images/openipc-t31x-nor-ultimate-xfp301m.bin
